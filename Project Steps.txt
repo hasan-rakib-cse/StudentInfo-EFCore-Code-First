@@ -1,0 +1,76 @@
+Implement ASP.NET MVC Core CRUD Operation with Entity Framework Core Using .NET 8.0 (Code First Approach)
+(WITH New MVC Controller - Empty)
+link: https://www.youtube.com/watch?v=DMpxhGkFYEU&list=PLp_RsiLZjwQQ7CxVhnM4G8i5veEClNPfX&index=39
+Video: 39-42
+	  
+
+Step-1: Select ASP.NET Core Web App (Model-View-Controller) and then go as usual.
+			
+Step-2: Install 3 Packages (Right click on dependencies file and click Manage NuGet Packages)
+			i)  Microsoft.EntityFrameworkCore.SqlServer  --  is used for SQL Server Data Provider
+			ii) Microsoft.EntityFrameworkCore.Tools  --  is used to manage Migration & to Scaffold a DbContext.
+			i)  Microsoft.EntityFrameworkCore.Design  --  contains all the design-time logic for EFCore.
+
+
+Step-3: Create a Model class (Student)
+
+Step-4: Create a DbContext Class in Models folder (StudentDbContext) and add a DbSet
+
+			public class StudentDbContext : DbContext
+			{
+				public StudentDbContext(DbContextOptions options) : base(options)
+				{
+				}
+				public DbSet<Student> Students { get; set; }
+			}
+
+Step-5: Create a ConnectionString in appsettings.json file.
+			"ConnectionStrings": {
+				"AppDbContext": "Server=DESKTOP-SC1LO7R;Database=StudentInfoEFCoreCodeFirst;TrustServerCertificate=True;Trusted_Connection=True;MultipleActiveResultSets=true"
+			}
+
+Step-6: Registering ConnectionString in Program.cs file. write the 3 lines in program.cs file
+	
+		var provider = builder.Services.BuildServiceProvider();
+		var config = provider.GetRequiredService<IConfiguration>();
+		builder.Services.AddDbContext<StudentDbContext>(item => item.UseSqlServer(config.GetConnectionString("dbcs")));
+
+Step-7: Add a Migration and run the migration in Package Manager Console:
+			i)  Add-Migration "mig01"
+			ii) Update-Database
+
+Step-8: insert some data into table with sql query/ manually
+
+Step-9: Create a DbContext class object in home controller.
+
+		private readonly ILogger<HomeController> _logger;
+		private readonly StudentDbContext _context;
+
+		public HomeController(ILogger<HomeController> logger, StudentDbContext context)
+		{
+			_logger = logger;
+			_context = context;
+		}
+		
+Step-10: delete Home Controller's index View (index.cshtcml) file.
+
+Step-11: Create Controller's action method's View in a different way (Scaffolding Method (code will generate automatically))
+		-- first check if we add a index action method's view of Home controller,
+		then first delete the view of Views->Home->index.cshtml file.
+
+		-- right click on action method (Index)
+		-- select razor view
+		-- change View Name or keep the remain name
+		-- select Template (each template is used for erach single CRUD operations.)
+				-- Create (-- is used for creating view of Create Operation)
+				-- Delete (-- is used for creating view of Delete Operation)
+				-- Details (-- is used for creating view of Showing Details)
+				-- Edit (-- is used for creating view of Edit Operation)
+				-- Empty (Without Model)
+				-- List (-- is used for show all data)
+		-- select Model class.
+		-- select Data context class.
+		-- click add
+		
+		
+## Read CSRF Concept for validation purpose (outside theke req asle amder action method execute e hobe na)
